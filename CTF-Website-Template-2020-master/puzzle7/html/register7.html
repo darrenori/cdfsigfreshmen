@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<title>Rocket Science</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+	<div class="wrapper d-flex align-items-stretch">
+		<nav id="sidebar">
+			<div class="custom-menu">
+				<button type="button" id="sidebarCollapse" class="btn btn-primary">
+					<i class="fa fa-bars"></i>
+					<span class="sr-only">Toggle Menu</span>
+				</button>
+			</div>
+			<div class="p-4 pt-5">
+				<h1><a href="nigol.html" class="logo">ROCKET SCIENCE</a></h1>
+				<ul style="list-style: none" class="list-unstyled components mb-5">
+
+					<li id="nav_helloUser" style="display: none;">
+                        <a href="nigol.html">"Hello,<span style="margin-left:5px;" id="puzzle7_username"></span>"</a>
+                    </li>
+                    <li>
+
+                    <li class="active" id="nav_updateProfile" style="display: none;">
+                        <a href="pfpage.html">Update Profile</a>
+                    </li>
+
+                    <li id="nav_registerAccount">
+                        <a href="register7.html">Register Account</a>
+                    </li>
+
+					<li id="nav_logout" style="display: none;">
+						<a href="#" onclick="logout_rocketScience()">Logout</button></a>
+					</li>
+
+					<li>
+                        <br>
+                        
+                            <div class="form-group">
+                                <!-- <label for="exampleInputEmail1">Username</label> -->
+                                <input type="username" class="form-control" id="rocket-user_login" aria-describedby="emailHelp"
+                                    placeholder="Enter Username">
+                                <small id="emailHelp" class="form-text text-muted"></small>
+                            </div>
+                            <div class="form-group">
+                                <!-- <label for="exampleInputPassword1">Password</label> -->
+                                <input type="password" class="form-control" id="rocket-passwd_login" placeholder="Password">
+                            </div>
+                            <!-- <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                            </div> -->
+                            <header id="error-text3"> Invalid Username or Password</header>
+                        
+						<button type="submit" class="btn btn-primary" onclick="login_rocketScience()">Login</button>
+
+                    </li>
+				</ul> 
+
+
+			</div>
+		</nav>
+
+		<!-- Page Content  -->
+		<div id="content" class="p-4 p-md-5 pt-5">
+
+			<h2 class="mb-4">Register</h2>
+			
+			<p id="warning_message"style="color:red;">You may need to save your username and password in your browser's autofill and press login twice or more for it to register</p>
+			
+			
+				<div class="form-group">
+					<label for="rocket-user">Username</label>
+					<input autocomplete="off" type="username" class="form-control" id="rocket-user" aria-describedby="emailHelp"
+						placeholder="Enter Username">
+					<small id="emailHelp" class="form-text text-muted"></small>
+				</div>
+				<div class="form-group">
+					<label for="rocket-passwd">Password</label>
+					<input type="password" class="form-control" id="rocket-passwd" placeholder="Password">
+				</div>
+				<!-- <div class="form-check">
+					<input type="checkbox" class="form-check-input" id="exampleCheck1">
+					<label class="form-check-label" for="exampleCheck1">Check me out</label>
+				</div> -->
+				<!-- <header id="error-text2"> Invalid Username or Password</header> -->
+			
+			<button type="submit" class="btn btn-primary" onclick="checkRegister_rocketScience()">Register</button>
+			<div>
+				<header id="username-error"> This  Username has been taken </header>
+			</div>
+		</div>
+
+	</div>
+
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/puzzle7(zx).js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="../js/main.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+
+</html>
