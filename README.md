@@ -3,7 +3,9 @@
 1. Create 2 windows. 1 for backend while the other is frontend
 2. npm start on backend
 3. Run on live server with frontend
-4. Fixed permission issues
+4. Node modules are installed **by yourself!**
+5. Puzzle 3 should be in ./htdocs/ folder
+6. Import SQL yourself
 
 **Answers:(TBC)**
 
