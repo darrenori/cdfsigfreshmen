@@ -31,7 +31,7 @@ Export deleted file
 Open in HxD
 
 Puzzle 6(Great search):
--
+
 
 Puzzle 7:
 Go to the link
