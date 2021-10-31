@@ -3,6 +3,7 @@
 1. Create 2 windows. 1 for backend while the other is frontend
 2. npm start on backend
 3. Run on live server with frontend
+4. Fixed permission issues
 
 **Answers:(TBC)**
 
