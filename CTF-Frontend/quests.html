@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>TP CDFSIG</title>
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="css/bootstrap4-neon-glow.min.css">
+
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel='stylesheet' href='//cdn.jsdelivr.net/font-hack/2.020/css/hack.min.css'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+</head>
+
+<div id="preloader">
+</div>
+
+<body onload="loading()">
+
+    <div class="navbar-dark text-white">
+        <div class="container">
+            <nav class="navbar px-0 navbar-expand-lg navbar-dark">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a href="index.html" class="pl-md-0 p-3 text-decoration-none text-light">
+                            <h3 class="bold"><span class="color_danger">TP</span><span class="color_white">CDFSIG</span></h3>
+                        </a>
+                    </div>
+                    <div onload=loadingFunctions() class="navbar-nav ml-auto" id="top-nav" >
+                        <a href="index.html" id="Home">Home</a>
+                        <a href="about.html" id="About">About</a>
+                        <a href="hackerboard.html" id="Hackerboard">Leaderboard</a>
+                        <a href="login.html" id="Login">Login</a>
+                        <a href="quests.html" id="Puzzle">Puzzles</a>
+                        <a href="register.html" id="Register">Register</a>
+                        <a href="login.html" id="Logout" onclick="logout()">Logout</a>
+                    </div>   
+                </div>
+            </nav>
+
+        </div>
+    </div>
+
+    <div class="jumbotron bg-transparent mb-0 pt-0 radius-0">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12  text-center">
+                    <h1 class="display-1 bold color_white content__title">SOLVE THE CASE<span class="vim-caret">&nbsp;</span></h1>
+                    <p class="text-grey text-spacey hackerFont lead">
+                        Its time to show the world what you can do!
+                    </p>
+                </div>
+                <div class="row hackerFont justify-content-center mt-5 mb-4">
+                    <div class="col-md-12">
+                        Chart Difficulties:
+                        <span style="color:#17b06b">Easy,</span>
+                        <span style="color:#ffce56">Medium,</span>
+                        <span style="color:#FFA500">Hard,</span>
+                        <span style="color:#ef121b">Extreme</span>
+                        <br><br>Challenge Types:
+                        <span class="p-1" style="background-color:#ef121b94">Web</span>
+                        <span class="p-1" style="background-color:#17b06b94">Reversing</span>
+                        <span class="p-1" style="background-color:#f9751594">Steganography</span>
+                        <span class="p-1" style="background-color:#36a2eb94">OSINT</span>
+                        <span class="p-1" style="background-color:#9966FF94">Cryptography</span>
+                        <span class="p-1" style="background-color:#ffce5694">Other</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="hint" tabindex="-1" role="dialog" aria-labelledby="hint label" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body" id="hint_text">
+                            HINT GOES HERE
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row hackerFont">
+                <div class="col-md-12">
+                    <div id="points"></div>
+                </div>
+                <br><br>
+                <div class="col-md-12" style="padding-top: 10px; padding-bottom: 10px;"> 
+                    <h4>Challenges</h4>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <div class="card category_easy">
+                        <div class="card-header" id="puzzle_1_container" data-target="" data-toggle="collapse" aria-expanded="false" aria-controls="problem_id_1">
+                            Kidnapped <span class="badge" id="solved_badge_1"></span> <span class="badge align-self-end">10 points</span> <span style="color:#17b06b">Easy</span> <span class="p-1" style="background-color:#ffce5694">Other</span>
+                        </div>
+                        <div id="problem_id_1" class="collapse card-body"> 
+                            <blockquote class="card-blockquote" id="card_1"> 
+                                <p> I wonder who kidnapped Russell ... 
+                                </p> 
+                                <a href="#hint" id="puzzle1hint" onclick="purchaseHint(id)" data-toggle="modal" data-target="#hint" class="btn btn-outline-secondary btn-shadow"><span class="far fa-lightbulb mr-2"></span>Hint (Costs 0 points)</a> 
+                                <div class="input-group mt-3"> 
+                                    <input type="text" class="form-control" id="answer_box_1" placeholder="Enter Flag" aria-label="Enter Flag" aria-describedby="basic-addon2"> 
+                                    <div class="input-group-append"> 
+                                        <button id="submit_p1" class="btn btn-outline-secondary" type="button" onclick="answer(1)">Submit</button> 
+                                    </div> 
+                                </div> 
+                            </blockquote> 
+                            <div id="answer_status_1"></div> 
+                            </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <div class="card category_easy">
+                        <div class="card-header" id="puzzle_2_container" data-target="" data-toggle="collapse" aria-expanded="false" aria-controls="problem_id_2">
+                            My Best Friend <span class="badge" id="solved_badge_2"></span> <span class="badge align-self-end">20 points <img id="padlock_2" src="images/padlock.png" width="20px"></span>
+                            <span style="color:#17b06b">Easy</span>
+                        </div>
+                        <div id="problem_id_2" class="collapse card-body"> 
+                            <blockquote class="card-blockquote" id="card_2"> 
+                                <p> Darren, Russell's closest friend has not seen Russell in a while. He realizes that
+                                    Russell has been kidnapped. As they are close friends there are might be some information about Russell that only Darren knows. 
+                                    Try to find Darren's social media account and find any new clues
+                                    to help you move on to the next stage. 
+                                </p> 
+                                <!-- <a target="_blank" href="#!" class="btn btn-outline-secondary btn-shadow"><span class="fa fa-download mr-2"></span>Website</a> -->
+                                <a href="#hint" id="puzzle2hint" onclick="purchaseHint(id)" data-toggle="modal" data-target="#hint" class="btn btn-outline-secondary btn-shadow"><span class="far fa-lightbulb mr-2"></span>Hint (Costs 0 points)</a> 
+                                <div class="input-group mt-3"> 
+                                    <input type="text" class="form-control" id="answer_box_2" placeholder="Enter Flag" aria-label="Enter Flag" aria-describedby="basic-addon2"> 
+                                    <div class="input-group-append"> 
+                                        <button id="submit_p2" class="btn btn-outline-secondary" type="button" onclick="answer(2)">Submit</button> 
+                                    </div> 
+                                </div> 
+                            </blockquote> 
+                            <div id="answer_status_2"></div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <div class="card category_medium">
+                        <div class="card-header" id="puzzle_3_container" data-target="" data-toggle="collapse" aria-expanded="false" aria-controls="problem_id_3">
+                            Impossible Password <span class="badge" id="solved_badge_3"></span> <span class="badge align-self-end">30 points <img id="padlock_3" src="images/padlock.png" width="20px"></span> <span style="color:#ffce56">Medium</span>
+                        </div>
+                        <div id="problem_id_3" class="collapse card-body"> 
+                            <blockquote class="card-blockquote" id="card_3"> 
+                                <p> Can you guess the correct username  
+                                </p> 
+                                <a target="_blank" href="http://localhost/puzzle3" class="btn btn-outline-secondary btn-shadow"><span class="fa fa-download mr-2"></span>Link</a> 
+                                <a href="#hint" id="puzzle3hint" onclick="purchaseHint(id)" data-toggle="modal" data-target="#hint" class="btn btn-outline-secondary btn-shadow"><span class="far fa-lightbulb mr-2"></span>Hint (Costs 10 points)</a> 
+                                <div class="input-group mt-3"> 
+                                    <input type="text" class="form-control" id="answer_box_3" placeholder="Enter Flag" aria-label="Enter Flag" aria-describedby="basic-addon2"> 
+                                    <div class="input-group-append"> 
+                                        <button id="submit_p3" class="btn btn-outline-secondary" type="button" onclick="answer(3)">Submit</button> 
+                                    </div> 
+                                </div> 
+                            </blockquote> 
+                            <div id="answer_status_3"></div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <div class="card category_medium">
+                        <div class="card-header" id="puzzle_4_container" data-target="" data-toggle="collapse" aria-expanded="false" aria-controls="problem_id_4">
+                            Find The Date <span class="badge" id="solved_badge_4"></span> <span class="badge align-self-end">50 points <img id="padlock_4" src="images/padlock.png" width="20px"></span> <span style="color:#ffce56">Medium</span>
+                        </div>
+                        <div id="problem_id_4" class="collapse card-body"> 
+                            <blockquote class="card-blockquote" id="card_4"> 
+                                <p> It seems there is a folder containing multiple files that may be useful. Could you find the Creation date of this folder in TP_CDFSIG{DDMMYYYY} Format
+                                </p> 
+                                <a target="_blank" href = "Challenge4.html" class="btn btn-outline-secondary btn-shadow"><span class="fa fa-download mr-2"></span>Link</a> 
+                                <a href="#hint" id="puzzle4hint" onclick="purchaseHint(id)" data-toggle="modal" data-target="#hint" class="btn btn-outline-secondary btn-shadow"><span class="far fa-lightbulb mr-2"></span>Hint (Costs 10 points)</a> 
+                                <div class="input-group mt-3"> 
+                                    <input type="text" class="form-control" id="answer_box_4" placeholder="DD MM YYYY" aria-label="Enter Flag" aria-describedby="basic-addon2"> 
+                                    <div class="input-group-append"> 
+                                        <button id="submit_p4" class="btn btn-outline-secondary" type="button" onclick="answer(4)">Submit</button> 
+                                    </div> 
+                                </div> 
+                            </blockquote> 
+                            <div id="answer_status_4"></div> 
+                            </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <div class="card category_hard">
+                        <div class="card-header" id="puzzle_5_container" data-target="" data-toggle="collapse" aria-expanded="false" aria-controls="problem_id_5">
+                            Russell's Hard Disk <span class="badge" id="solved_badge_5"></span> <span class="badge align-self-end"</span>100 points <img id="padlock_5" src="images/padlock.png" width="20px"></span> <span style="color:#FFA500">Hard</span>
+                        </div>
+                        <div id="problem_id_5" class="collapse card-body"> 
+                            <blockquote class="card-blockquote" id="card_5"> 
+                                <p> Examine through the hard disk. I wonder what could be inside? 
+                                </p> 
+                                <a target="_blank" href="download/Challenge 5.zip" class="btn btn-outline-secondary btn-shadow"><span class="fa fa-download mr-2"></span>Download</a> 
+                                <a href="#hint" id="puzzle5hint" onclick="purchaseHint(id)" data-toggle="modal" data-target="#hint" class="btn btn-outline-secondary btn-shadow"><span class="far fa-lightbulb mr-2"></span>Hint (Costs 20 points)</a> 
+                                <div class="input-group mt-3"> 
+                                    <input type="text" class="form-control" id="answer_box_5" placeholder="Enter Flag" aria-label="Enter Flag" aria-describedby="basic-addon2"> 
+                                    <div class="input-group-append"> 
+                                        <button id="submit_p5" class="btn btn-outline-secondary" type="button" onclick="answer(5)">Submit</button> 
+                                    </div> 
+                                </div> 
+                            </blockquote> 
+                            <div id="answer_status_5"></div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <div class="card category_hard">
+                        <div class="card-header" id="puzzle_6_container" data-target="" data-toggle="collapse" aria-expanded="false" aria-controls="problem_id_6">
+                            The Great Search <span class="badge" id="solved_badge_6"></span> <span class="badge align-self-end">200 points <img id="padlock_6" src="images/padlock.png" width="20px"></span> <span style="color:#FFA500">Hard</span>
+                        </div>
+                        <div id="problem_id_6" class="collapse card-body"> 
+                            <blockquote class="card-blockquote" id="card_6"> 
+                                <p>Nice Job! It seems that you have made it pass through puzzle 5! You are now 1 step closer to uncover the kidnapper's identity and place of kidnap.</p>
+                                <p>In this puzzle, you will have to search for anything that is related to the kidnap deriving from the hints you have gotten in the previous puzzle.</p>
+                                <p>Search for any information you want, until it triggers a pop up, then remove the pop up and proceed from there. Then, explore and find the answers you need!</p>
+                                <p>PS: Best to search extra information before continuing after removing pop up.</p>
+                                <div class="input-group mt-3" id="puzzle_6_input_group"> 
+                                    <input type="text" class="form-control" id="search_value" placeholder="Enter key phrases or words to search" aria-label="Enter Flag" aria-describedby="basic-addon2"> 
+                                    <div class="input-group-append"> 
+                                        <button id="search_button" class="btn btn-outline-secondary" type="button" onclick="puzzle_6_search()">Search</button> 
+                                    </div>
+                                </div>
+                                <div class="mt-3 mb-3">
+                                    <p id="search_output_indication" style="color: #00FF00"></p> 
+                                    <div id="search_output" style="color: #00FF00"></div>
+                                </div>
+                                
+                                <p> What is the last message you observe there in the photo attached to the post?</p> 
+                                <a href="#hint" id="puzzle6hint" onclick="purchaseHint(id)" data-toggle="modal" data-target="#hint" class="btn btn-outline-secondary btn-shadow"><span class="far fa-lightbulb mr-2"></span>Hint (Costs 20 points)</a> 
+                                <div class="input-group mt-3"> 
+                                    <input type="text" class="form-control" id="answer_box_6" placeholder="Enter Flag" aria-label="Enter Flag" aria-describedby="basic-addon2"> 
+                                    <div class="input-group-append"> 
+                                        <button id="submit_p7" class="btn btn-outline-secondary" type="button" onclick="answer(6)">Submit</button> 
+                                    </div> 
+                                </div> 
+                            </blockquote> 
+                            <div id="answer_status_6"></div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <div class="card category_extreme">
+                        <div class="card-header" id="puzzle_7_container" data-target="" data-toggle="collapse" aria-expanded="false" aria-controls="problem_id_7">
+                            Puzzle 7 <span class="badge" id="solved_badge_7"></span> <span class="badge align-self-end">250 points <img id="padlock_7" src="images/padlock.png" width="20px"></span> <span style="color:#ef121b">Extreme</span>
+                        </div>
+                        <div id="problem_id_7" class="collapse card-body"> 
+                            <blockquote class="card-blockquote" id="card_7"> 
+                                <p> Can you find the password? Enter the password as flag in the following form: TP_CDFSIG{passwordhere} 
+                                </p> 
+                                <a target="_blank" href="puzzle7/html/puzzle7.html" class="btn btn-outline-secondary btn-shadow"></span>Bring Me</a> 
+                                <a href="#hint" id="puzzle7hint" onclick="purchaseHint(id)" data-toggle="modal" data-target="#hint" class="btn btn-outline-secondary btn-shadow"><span class="far fa-lightbulb mr-2"></span>Hint (Costs 100 points)</a> 
+                                <div class="input-group mt-3"> 
+                                    <input type="text" class="form-control" id="answer_box_7" placeholder="Enter Flag" aria-label="Enter Flag" aria-describedby="basic-addon2"> 
+                                    <div class="input-group-append"> 
+                                        <button id="submit_p8" class="btn btn-outline-secondary" type="button" onclick="answer(7)">Submit</button> 
+                                    </div> 
+                                </div> 
+                            </blockquote> 
+                            <div id="answer_status_7"></div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <div class="card category_extreme">
+                        <div class="card-header" id="puzzle_8_container" data-target="" data-toggle="collapse" aria-expanded="false" aria-controls="problem_id_8">
+                            Puzzle 8 <span class="badge" id="solved_badge_8"></span> <span class="badge align-self-end">300 points <img id="padlock_8" src="images/padlock.png" width="20px"></span> <span style="color:#ef121b">Extreme</span>
+                        </div>
+                        <div id="problem_id_8" class="collapse card-body"> 
+                            <blockquote class="card-blockquote" id="card_8"> 
+                                <p> Can you find the password? Enter the password as flag in the following form: TP_CDFSIG{passwordhere} 
+                                </p> 
+                                <a target="_blank" href="#!" class="btn btn-outline-secondary btn-shadow"><span class="fa fa-download mr-2"></span>Download</a> 
+                                <a href="#hint" id="puzzle8hint" onclick="purchaseHint(id)" data-toggle="modal" data-target="#hint" class="btn btn-outline-secondary btn-shadow"><span class="far fa-lightbulb mr-2"></span>Hint (Costs 100 points)</a> 
+                                <div class="input-group mt-3"> 
+                                    <input type="text" class="form-control" id="answer_box_8" placeholder="Enter Flag" aria-label="Enter Flag" aria-describedby="basic-addon2"> 
+                                    <div class="input-group-append"> 
+                                        <button id="submit_p6" class="btn btn-outline-secondary" type="button" onclick="answer(8)">Submit</button> 
+                                    </div> 
+                                </div> 
+                            </blockquote> 
+                            <div id="answer_status_8"></div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="completed_message">
+                
+            </div>
+        <script>
+            /*var dataset = [
+                [41, 42, 43, 44, 45, 0], // keep the zero here
+                [10, 9, 8, 7, 6, 0],
+                [21, 16, 23, 1, 15, 0],
+                [71, 12, 13, 17, 25, 0],
+                [31, 5, 23, 24, 10, 0],
+                [11, 2, 13, 41, 15, 0],
+                [31, 5, 23, 24, 10, 0],
+                [11, 2, 13, 41, 15, 0],
+            ]
+
+            function getBarChartData(i) {
+                return barChartData = {
+                    labels: ['Easy1', 'Easy2', 'Medium3', 'Hard4', 'Hard5'],
+                    datasets: [{
+                        label: 'Dataset 1',
+                        backgroundColor: [
+                            '#17b06b', '#17b06b', '#ffce56', '#ef121b', '#ef121b'
+                        ],
+                        borderColor: [
+                            '#17b06b', '#17b06b', '#ffce56', '#ef121b', '#ef121b'
+                        ],
+                        borderWidth: 1,
+                        data: dataset[i - 1]
+                    }]
+
+                };
+                
+            }*/
+
+            /*window.onload = function() {
+                var numcharts = 8;
+                for (let i = 1; i <= numcharts; i++) {
+                    var ctx = document.getElementById('problem_id_' + i + '_chart').getContext('2d');
+                    window.myBar = new Chart(ctx, {
+                        type: 'bar',
+                        data: getBarChartData(i),
+                        options: {
+                            tooltips: {
+                                enabled: false,
+                            },
+                            responsive: false,
+                            legend: {
+                                display: false,
+                            },
+                            scales: {
+                                yAxes: [{
+                                    display: false
+                                }],
+                                xAxes: [{
+                                    display: false
+                                }]
+                            }
+                        }
+                    });
+                    myBar.canvas.parentNode.style.width = '80px';
+                    myBar.canvas.parentNode.style.height = '20px';
+                }
+            };*/
+        </script>
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        
+        <script src="js/app.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="js/preloader.js"></script>
+        <script src="https://www.w3schools.com/lib/w3.js"></script>    
+        <script src="js/logout.js"></script>
+        <script src="js/puzzle.js"></script>
+        <script src="js/checktoken.js"></script>
+        
+        <script>
+            //to bring in other HTML on the fly into this page
+            w3.includeHTML();
+        </script>
+</body>
+
+</html>
