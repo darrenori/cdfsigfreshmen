@@ -1,40 +1,56 @@
 "use strict";
 
-//The express framework is built on top of the node. js framework and helps in fast-tracking development of server-based applications
-const express = require("express"); 
-const bodyParser = require("body-parser"); 
-const userController = require('./controllers/userController');
+const { createApp } = require("./src/app");
+const { config } = require("./src/config");
+const { database } = require("./src/database");
+const { logger } = require("./src/logger");
 
-var cors = require('cors');
+let server;
+let shuttingDown = false;
 
-const { stringify } = require('querystring');
-var app = express();
-var host = "127.0.0.1";
-var port = 8081;
+async function start() {
+  await database.check();
 
-app.use(cors());
-//This app starts a server and listens on port 8080 for connection
-var server = app.listen(port, host, function() {
-    var host = server.address().address;
-    var port = server.address().port;
+  const app = createApp({ database, config });
+  server = app.listen(config.port, config.host, () => {
+    logger.info("server.started", {
+      host: config.host,
+      port: config.port,
+      environment: config.environment,
+    });
+  });
+}
 
-    console.log("Example Apps listen at http://%s:%s", host, port);
+async function shutdown(signal) {
+  if (shuttingDown) return;
+  shuttingDown = true;
+  logger.info("server.stopping", { signal });
+
+  const forceExit = setTimeout(() => {
+    logger.error("server.shutdown_timeout");
+    process.exit(1);
+  }, config.shutdownTimeoutMs);
+  forceExit.unref();
+
+  if (server) {
+    await new Promise((resolve, reject) => {
+      server.close((error) => (error ? reject(error) : resolve()));
+    });
+  }
+
+  await database.close();
+  clearTimeout(forceExit);
+  logger.info("server.stopped");
+}
+
+process.on("SIGINT", () => shutdown("SIGINT").then(() => process.exit(0)));
+process.on("SIGTERM", () => shutdown("SIGTERM").then(() => process.exit(0)));
+
+process.on("unhandledRejection", (error) => {
+  logger.error("process.unhandled_rejection", { error });
 });
 
-//To get inputs sent in the body of the request, we need to use the body-parse
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-app.route('/TPuser/:Username').get(userController.getUser);
-app.route('/TPusers').post(userController.addUser);
-app.route('/LoginTPusers').post(userController.loginUser);
-app.route('/Getuser/:token').post(userController.userInfo);
-app.route('/GetAllUsers').get(userController.getAllUsers);
-app.route('/addTime').post(userController.postTiming);
-app.route('/useHint').post(userController.useHint); 
-app.route('/Puzzle7/:Username').get(userController.puzzle7_getUser);
-app.route('/LoggingPuzzle7').post(userController.puzzle7_login);
-app.route('/SwappingPuzzle7').post(userController.puzzle7_update); 
-app.route('/RegisteringPuzzle7').post(userController.puzzle7_register);
-app.route('/puzzle7_checkusername').post(userController.puzzle7_checkuser);
-app.route('/puzzle7_checkusername/:decoded_Username').get(userController.puzzle7_checkuser);  
+start().catch((error) => {
+  logger.error("server.start_failed", { error });
+  process.exit(1);
+});

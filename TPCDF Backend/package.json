@@ -1,24 +1,28 @@
 {
   "name": "tpcdf-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "tpcdfsig.js",
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "ejc": "^1.0.4",
-    "express": "^4.17.1",
-    "init": "^0.1.2",
-    "jsonwebtoken": "^8.5.1",
-    "mysql": "^2.18.1",
-    "nodemailer": "^6.6.3",
-    "nodemon": "^2.0.12",
-    "package.json": "^2.0.1"
+  "description": "Backend for the CDFSIG freshmen CTF event platform",
+  "main": "server.js",
+  "engines": {
+    "node": ">=20"
   },
-  "devDependencies": {},
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.23.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14",
+    "supertest": "^7.2.2"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "test": "node --test",
+    "check": "node --check server.js && node --check src/app.js && node --check src/user-controller.js"
   },
   "author": "",
   "license": "ISC"
