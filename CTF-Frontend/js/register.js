@@ -1,71 +1,40 @@
 const salt = "j1n23s9xcx";
-function goRegister(){
 
-    var registerUser = new XMLHttpRequest();
-
-    registerUser.open("POST","http://localhost:8081/TPusers/",true)
-    registerUser.setRequestHeader("Content-Type","application/json")
-    
-
-
-    registerUser.onload=function(){
-        putToken(Username, Password);
-    }
-
-    
-    //unencrypted  but with salt
-    var Username = document.getElementById("team_name").value;
-    var Password = document.getElementById("password").value +salt;
-
-    //encrypted
-    Password = CryptoJS.MD5(CryptoJS.enc.Hex.parse(Password)).toString();
-
-    var payload = {Username:Username, Password:Password};
-    console.log(payload)
-    registerUser.send(JSON.stringify(payload));
+function registrationValues() {
+    const username = document.getElementById("team_name").value.trim();
+    const passwordInput = document.getElementById("password").value;
+    const password = CryptoJS.MD5(CryptoJS.enc.Hex.parse(passwordInput + salt)).toString();
+    return { username, passwordInput, password };
 }
 
-function checkRegister(){
+async function checkRegister() {
+    const values = registrationValues();
+    $("#username-error").hide();
 
-    var checkRegister = new XMLHttpRequest();
+    if (!values.username || !values.passwordInput) {
+        $("#username-error").show();
+        return;
+    }
 
-    var Username = document.getElementById("team_name").value;
-
-    url = "http://localhost:8081/TPuser/" + Username;
-
-    checkRegister.open('GET', url , true);
-    checkRegister.onload = function () {
-        var validation = JSON.parse(checkRegister.responseText);
-        if(validation.length == 0){
-            goRegister()
-        }else{
-            $('#username-error').show();
+    try {
+        const users = await CtfApi.get("/TPuser/" + encodeURIComponent(values.username));
+        if (users.length > 0) {
+            $("#username-error").show();
+            return;
         }
-    };
-    
-    checkRegister.send()
+        await goRegister(values.username, values.password);
+    } catch {
+        $("#username-error").show();
+    }
 }
 
-function putToken(Username, Password){
+async function goRegister(username, password) {
+    await CtfApi.post("/TPusers", { Username: username, Password: password });
+    await putToken(username, password);
+}
 
-    var putToken = new XMLHttpRequest();
-
-    putToken.open("POST","http://localhost:8081/LoginTPusers",true)
-    putToken.setRequestHeader("Content-Type","application/json")
-    putToken.onload=function(){
-        token = JSON.parse(putToken.responseText);
-        if(token != 0){
-            window.location.href='instructions.html';
-            sessionStorage.setItem("token", token.result);
-            $('#Login').hide();
-            $('#Register').hide();
-            $('#Puzzle').show();
-            $('#Logout').show();
-        }else{
-            $('#error-text').show();
-        }
-    }
-    var payload = {Username:Username, Password:Password};
-    console.log(payload)
-    putToken.send(JSON.stringify(payload));
+async function putToken(username, password) {
+    const token = await CtfApi.post("/LoginTPusers", { Username: username, Password: password });
+    sessionStorage.setItem("token", token.result);
+    window.location.href = "instructions.html";
 }

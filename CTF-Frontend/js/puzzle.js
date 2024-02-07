@@ -1,29 +1,26 @@
-function loading(){
+async function loading(){
 
     //Step 1 is to know who is the User from the session token
 
     var token = sessionStorage.getItem("token");
 
-    var getUser = new XMLHttpRequest();
+    if (!token) {
+        window.location.href = "login.html";
+        return;
+    }
 
-    url = "http://localhost:8081/Getuser/" + token;
-
-    getUser.open('POST', url , true);
-    getUser.onload = function () {
-        var result = JSON.parse(getUser.responseText); //This is the User
-        getUserInfo(result.result); //Now we can proceed to retrieving the User's info
-    };
-    
-    getUser.send()
+    try {
+        var result = await CtfApi.post("/Getuser/" + encodeURIComponent(token));
+        await getUserInfo(result.result);
+    } catch {
+        sessionStorage.removeItem("token");
+        window.location.href = "login.html";
+    }
 }
 
-function getUserInfo(user){
-    var userInfo = new XMLHttpRequest();
-    url = "http://localhost:8081/TPuser/" + user;
-
-    userInfo.open('GET', url , true);
-    userInfo.onload = function() {
-        var information = JSON.parse(userInfo.responseText);
+async function getUserInfo(user){
+        var information = await CtfApi.get("/TPuser/" + encodeURIComponent(user));
+        if (!information.length) throw new Error("User not found");
         //console.log(information)
         sessionStorage.setItem('user_hint', information[0].Hint)
         var user_puzzle_status = []
@@ -40,9 +37,6 @@ function getUserInfo(user){
         sessionStorage.setItem('all_puzzle_status', user_puzzle_status)
         total_points();
         check_progress(information);
-    };
-    
-    userInfo.send()
 }
 
 function puzzle_6_search(){
@@ -89,95 +83,13 @@ function puzzle_6_search(){
     
 }
 
-function convertTime(){
-
-    var date2 = new Date(); 
-    console.log(date2)
-    var date1 = new Date(2021, 9, 29, 7, 0);
-    //console.log("Date of the competition: " + date2)
-    //console.log("Current date: " + date1) 
-
-    if (date2 < date1) {
-        date2.setDate(date2.getDate() + 1);
-    }
-
-    var diff = date2 - date1;
-   
-    var msec = diff;
-    var hh = Math.floor(msec / 1000 / 60 / 60);
-    msec -= hh * 1000 * 60 * 60;
-    var mm = Math.floor(msec / 1000 / 60);
-    msec -= mm * 1000 * 60;
-    var ss = Math.floor(msec / 1000);
-    msec -= ss * 1000;
-
-    var time = hh + ":" + mm + ":" + ss;
-    if(time.split(":")[0].length == 1){
-        time = "0" + time.split(":")[0] + ":" + time.split(":")[1] + ":" + time.split(":")[2]
-    } else if (time.split(":")[1].length == 1){
-        time = time.split(":")[0] + ":0" + time.split(":")[1] + ":" + time.split(":")[2]
-    } else if (time.split(":")[2].length == 1){
-        time = time.split(":")[0] + ":" + time.split(":")[1] + ":0" + time.split(":")[2]
-    }
-     
-    var result = "2021-10-29"+ " " + time;
-    //console.log("Time between the 2 dates: " + result);
-
-    return result;
-}
-
-//add timing function to record puzzle completion timing. Remember to add puzzle number into parameter (number)
-function addTime(number)
-{
-    var time = new Object();
-    var newTime = convertTime();
-    var token = sessionStorage.getItem("token");
-
-    if(number==1)
-    {
-        time.puzzleNum = "puzzle1"
-    }
-    else if (number==2)
-    {
-        time.puzzleNum = "puzzle2"
-    }
-    else if (number==3)
-    {
-        time.puzzleNum = "puzzle3"
-    }
-    else if (number==4)
-    {
-        time.puzzleNum = "puzzle4"
-    }
-    else if (number==5)
-    {
-        time.puzzleNum = "puzzle5"
-    }
-    else if (number==6)
-    {
-        time.puzzleNum = "puzzle6"
-    }
-    else if (number==7)
-    {
-        time.puzzleNum = "puzzle7"
-    }
-    else
-    {
-        time.puzzleNum = "puzzle8"
-    }
-    
-    time.puzzleTime = newTime;
-    time.token = token; // for validating and retrieving username
-    
-    var postTime = new XMLHttpRequest(); // 
-
-    // console.log(newTime);
-    // console.log(token);
-    // console.log(time.puzzleNum);
-
-    postTime.open("POST", "http://localhost:8081/addTime", true); //
-    postTime.setRequestHeader("Content-Type", "application/json");
-    postTime.send(JSON.stringify(time)); // 
+async function addTime(number) {
+    const puzzleNumber = Number(number);
+    if (!Number.isInteger(puzzleNumber) || puzzleNumber < 1 || puzzleNumber > 8) return;
+    await CtfApi.post("/addTime", {
+        puzzleNum: "puzzle" + puzzleNumber,
+        token: sessionStorage.getItem("token"),
+    });
 }
 
 // this function returns the price of a given hint
@@ -217,7 +129,7 @@ var puzzle6hint="hint 6";
 var puzzle7hint="The audio sounds like morse code...! Also, make sure to have your lunch! I ate too much so I'm burping too much :(";
 var puzzle8hint="hint 8";
 
-function purchaseHint(pID){
+async function purchaseHint(pID){
     var hintsArray=[puzzle1hint,puzzle2hint,puzzle3hint,puzzle4hint,puzzle5hint,puzzle6hint,puzzle7hint,puzzle8hint];
     var hintsCost=["0","0","10",'10','20','20','100','100'];
     var payload = new Object();
@@ -269,16 +181,12 @@ hintArray.push(userHints[i]);
     payload.token=token;
 
 
-    var useAHint = new XMLHttpRequest();//
-
-    url = "http://localhost:8081/useHint";
-    useAHint.open('POST', url , true);
-    useAHint.setRequestHeader("Content-Type", "application/json");
-    useAHint.onload = function () {
-        loading(); //refresh the page so hints get updated (alternatively we can just manually change the session 
-        //storage to the correct value, since the database will have been updated already)
-    };
-    useAHint.send(JSON.stringify(payload));
+    try {
+        await CtfApi.post("/useHint", payload);
+        await loading();
+    } catch (error) {
+        document.getElementById("hint_text").textContent = error.message;
+    }
 }
 
 function answer(puzzle_number){
