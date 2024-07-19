@@ -1,0 +1,25 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.npm/
+
+# Local config / secrets (don't commit real creds)
+.env
+.env.local
+TPCDF Backend/config.local.js
+
+# Editor / OS junk
+.vscode/
+.idea/
+*.code-workspace
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Visual Studio scratch that snuck into the repo before
+TPCDF Backend/vs/slnx.sqlite
+
+# Build / logs
+*.log
+dist/
