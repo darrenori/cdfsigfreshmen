@@ -1,0 +1,13 @@
+.git
+.github
+**/.env
+**/.env.*
+!**/.env.example
+**/node_modules
+**/npm-debug.log*
+**/*.log
+docs
+TPCDF Backend/test
+TPCDF Backend/vs
+TPCDF Backend/a
+*.code-workspace

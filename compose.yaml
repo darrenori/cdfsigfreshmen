@@ -1,0 +1,57 @@
+services:
+  database:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: test
+      MYSQL_USER: cdfsig
+      MYSQL_PASSWORD: ${DB_PASSWORD:-cdfsig-local}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-cdfsig-root-local}
+      TZ: Asia/Singapore
+    volumes:
+      - database-data:/var/lib/mysql
+      - ./ImportMe.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    security_opt:
+      - no-new-privileges:true
+
+  app:
+    build:
+      context: .
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 8081
+      SERVE_FRONTEND: "true"
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      JWT_SECRET: ${JWT_SECRET:-hehexd}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-12h}
+      EVENT_START_AT: ${EVENT_START_AT:-2021-10-29T07:00:00+08:00}
+      EVENT_TIMEZONE_OFFSET: ${EVENT_TIMEZONE_OFFSET:-+08:00}
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_USER: cdfsig
+      DB_PASSWORD: ${DB_PASSWORD:-cdfsig-local}
+      DB_NAME: test
+      DB_CONNECTION_LIMIT: ${DB_CONNECTION_LIMIT:-10}
+      TZ: Asia/Singapore
+    ports:
+      - "${APP_PORT:-8081}:8081"
+    depends_on:
+      database:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  database-data:
