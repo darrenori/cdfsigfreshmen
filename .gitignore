@@ -7,6 +7,7 @@ yarn-error.log*
 # Local config / secrets (don't commit real creds)
 .env
 .env.local
+!.env.example
 TPCDF Backend/config.local.js
 
 # Editor / OS junk

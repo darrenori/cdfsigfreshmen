@@ -1,31 +1,15 @@
-function login_rocketScience() {
-
-    var loginUser = new XMLHttpRequest();
-
-    loginUser.open("POST", "http://localhost:8081/LoggingPuzzle7", true)
-    loginUser.setRequestHeader("Content-Type", "application/json")
-    loginUser.onload = function () {
-        token = JSON.parse(loginUser.responseText);
-
-        if (token != 0) {
-            sessionStorage.setItem("token_puzzle7", token.result);
-            window.location.href = 'nigol.html';
-            // $('#Login').hide();
-            // $('#Register').hide();
-            // $('#Puzzle').show();
-            // $('#Logout').show();
-        } else {
-            $('#error-text3').show();
-        }
-        sessionStorage.setItem("frenchfries","fYV0pJT6Qp90iA55vCAwYoUasA90gYiyfTH4lV==")
-    }
-
-    var Username = document.getElementById("rocket-user_login").value;
+async function login_rocketScience() {
+    var Username = document.getElementById("rocket-user_login").value.trim();
     var Password = document.getElementById("rocket-passwd_login").value;
-    var payload = { Username: Username, Password: Password };
 
-    // getUserInfo(Username);//Loads hint into session storage
-    loginUser.send(JSON.stringify(payload));
+    try {
+        var token = await CtfApi.post("/LoggingPuzzle7", { Username: Username, Password: Password });
+            sessionStorage.setItem("token_puzzle7", token.result);
+            sessionStorage.setItem("frenchfries", "fYV0pJT6Qp90iA55vCAwYoUasA90gYiyfTH4lV==");
+            window.location.href = 'nigol.html';
+    } catch {
+        $('#error-text3').show();
+    }
 }
 
 function logout_rocketScience() {
@@ -34,46 +18,33 @@ function logout_rocketScience() {
     window.location.href = 'nigol.html';
 }
 
-function register_rocketScience() {
-
-    var registerUser = new XMLHttpRequest();
-    registerUser.open("POST", "http://localhost:8081/RegisteringPuzzle7", true)
-    registerUser.setRequestHeader("Content-Type", "application/json")
-    registerUser.onload = function () {
-        window.location.href = 'nigol.html';
-    }
-    var Username = document.getElementById("rocket-user").value;
+async function register_rocketScience() {
+    var Username = document.getElementById("rocket-user").value.trim();
     var Password = document.getElementById("rocket-passwd").value;
-    var payload = { Username: Username, Password: Password };
-    registerUser.send(JSON.stringify(payload));
+    try {
+        await CtfApi.post("/RegisteringPuzzle7", { Username: Username, Password: Password });
+        window.location.href = 'nigol.html';
+    } catch {
+        $('#username-error').show();
+    }
 }
 
-function checkRegister_rocketScience() {
-
-    var checkRegister_rocketScience = new XMLHttpRequest();
-
-    var Username = document.getElementById("rocket-user").value;
-
-    url = "http://localhost:8081/Puzzle7/" + Username;
-
-    checkRegister_rocketScience.open('GET', url, true);
-    checkRegister_rocketScience.onload = function () {
-        if (Username.toLowerCase() != "admin") {
-            var validation = JSON.parse(checkRegister_rocketScience.responseText);
+async function checkRegister_rocketScience() {
+    var Username = document.getElementById("rocket-user").value.trim();
+    if (!Username || Username.toLowerCase() === "admin") {
+        $('#username-error').show();
+        return;
+    }
+    try {
+            var validation = await CtfApi.get("/Puzzle7/" + encodeURIComponent(Username));
             if (validation.length == 0) {
-
-                register_rocketScience()
+                await register_rocketScience();
             } else {
                 $('#username-error').show();
             }
-        }
-        else {
-            $('#username-error').show();
-        }
-
-    };
-
-    checkRegister_rocketScience.send()
+    } catch {
+        $('#username-error').show();
+    }
 }
 
 
@@ -86,8 +57,6 @@ function login_puzzle7() {
     console.log(hexs1+"first");
     console.log(hexs2);
 
-    var loginUser_puzzle7 = new XMLHttpRequest();
-    
     if (login_username != login_password && hexs1 == hexs2) {
 
         window.location.href = 'nigol.html';
@@ -98,19 +67,12 @@ function login_puzzle7() {
         $('#error-text2').show();
     }
 
-    //Hardcode the username and password here
-    var Username = "Default_User";
-    var Password = "Abc123";
-    var payload = { Username: Username, Password: Password };
-    loginUser_puzzle7.send(JSON.stringify(payload));
 }
 
-function getUserData() {
+async function getUserData() {
     var token = sessionStorage.getItem('token_puzzle7')
-    var checkusername = new XMLHttpRequest();
-    checkusername.open('GET', "http://localhost:8081/puzzle7_checkusername/" + token, true);
-    checkusername.onload = function () {
-        var token2 = JSON.parse(checkusername.responseText);
+    try {
+        var token2 = await CtfApi.get("/puzzle7_checkusername/" + encodeURIComponent(token));
         var token3 = token2.result; // this is the current logged in user
         var intTable = document.getElementById("interesting-table");
         if (token3 != false) {
@@ -128,14 +90,16 @@ function getUserData() {
             intTable.remove();
         }
 
+    } catch {
+        sessionStorage.removeItem("token_puzzle7");
+        window.location.href = "nigol.html";
     }
-    checkusername.send();
 }
 
 
 
 // REMEMBER TO SHARE With ZX
-function getUserData_updateProfile() {
+async function getUserData_updateProfile() {
     
     var username = sessionStorage.getItem("token_puzzle7")
     
@@ -144,10 +108,8 @@ function getUserData_updateProfile() {
     }
     
     var token = sessionStorage.getItem('token_puzzle7')
-    var checkusername = new XMLHttpRequest();
-    checkusername.open('GET', "http://localhost:8081/puzzle7_checkusername/" + token, true);
-    checkusername.onload = function () {
-        var token2 = JSON.parse(checkusername.responseText);
+    try {
+        var token2 = await CtfApi.get("/puzzle7_checkusername/" + encodeURIComponent(token));
         var token3 = token2.result; // this is the current logged in user
         var intTable = document.getElementById("interesting-table");
         if (token3 != false) {
@@ -164,24 +126,19 @@ function getUserData_updateProfile() {
             intTable.remove();
         }
 
+    } catch {
+        window.location.href = "nigol.html";
     }
-    checkusername.send();
 }
 
-function goUpdate() {
-
-    var updateUser = new XMLHttpRequest();
-
-    updateUser.open("POST", "http://localhost:8081/SwappingPuzzle7", true)
-    updateUser.setRequestHeader("Content-Type", "application/json")
-    updateUser.onload = function () {
+async function goUpdate() {
+    var U = sessionStorage.getItem("token_puzzle7") + "1";
+    var Password = document.getElementById("exampleInputPassword1").value;
+    try {
+        await CtfApi.post("/SwappingPuzzle7", { Username: U, Password: Password });
         $('#update-password').show();
         setTimeout(function () { $('#update-password').hide(); }, 3000);
+    } catch {
+        $('#update-password').text("Update failed").show();
     }
-
-    var U = sessionStorage.getItem("token_puzzle7")+"1";
-    var Password = document.getElementById("exampleInputPassword1").value;
-    var payload = { Username: U, Password: Password };
-    // getUserInfo(U);//Loads hint into session storage
-    updateUser.send(JSON.stringify(payload));
 }

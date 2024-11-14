@@ -237,7 +237,8 @@ ALTER TABLE `tp_users`
 -- Indexes for table `userprofile`
 --
 ALTER TABLE `userprofile`
-  ADD PRIMARY KEY (`idUserProfile`);
+  ADD PRIMARY KEY (`idUserProfile`),
+  ADD UNIQUE KEY `username_UNIQUE` (`username`);
 
 --
 -- AUTO_INCREMENT for dumped tables
